@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Dodaj grupę obiektów",
+        "description": "Dodaj grupę obiektów (dowolna nazwa), w ramach której zawarte będą mapowania encji na cechy użytkownika. Podaj również Adres URL do Grenton HTTP Listener.\n\nUwaga! Po utworzeniu grupy przejdź do ustawień grupy aby dodać mapowania.",
+        "data": {
+          "url": "Adres URL do Grenton HTTP Listener",
+          "name": "Nazwa grupy obiektów"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Zarządzaj cechami użytkownika Grenton",
+        "description": "Dodaj, usuń lub edytuj cechę użytkownika w Grenton, do której zapisywana jest wartość encji Home Assistant po każdej zmianie.",
+        "data": {
+          "mapping_index": "Mapowanie na cechę użytkownika",
+          "action": "Akcja"
+        }
+      },
+      "add_entity": {
+        "title": "Wybierz encję do obserwowania",
+        "description": "W pierwszym kroku wybierz encję, której wartość chcesz wysyłać do Grentona.",
+        "data": {
+          "entity_id": "Identyfikator encji"
+        }
+      },
+      "add_attribute": {
+        "title": "Wybierz atrybut encji do obserwowania",
+        "description": "W drugim kroku wybierz atrybut encji do obserwowania, oraz cechę użytkownika na CLU lub GATE, do której ta wartość będzie przypisywana.\n\nUwaga! Jeśli cecha użytkownika znajduje się na CLU, dodaj identyfikator CLU, przykład: \"CLU220000000->moja_cecha\". Jeśli cecha znajduje się na GATE_HTTP, to wpisz samą nazwę cechy, przykład: \"moja_cecha\".",
+        "data": {
+          "attribute": "Atrybut",
+          "name": "Cecha użytkownika w Grenton"
+        }
+      }
+    }
+  },
+  "selector": {
+    "action": {
+      "options": {
+        "add": "Dodaj",
+        "edit": "Edytuj",
+        "delete": "Usuń",
+        "save": "Zapisz"
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add object group",
+        "description": "Add an object group (any name) that will contain mappings between Home Assistant entities and Grenton user features. Also provide the URL address for the Grenton HTTP Listener.\n\nNote! After creating the group, go to the group settings to add mappings.",
+        "data": {
+          "url": "URL to Grenton HTTP Listener",
+          "name": "Object group name"
+        }
+      }
+    }
+  },
+  "options": {
+    "title": "Manage Grenton user features",
+    "step": {
+      "init": {
+        "description": "Add, remove, or edit the Grenton user feature to which the Home Assistant entity value is written after each change.",
+        "data": {
+          "mapping_index": "User feature mapping",
+          "action": "Action"
+        }
+      },
+      "add_entity": {
+        "title": "Select the entity to watch",
+        "description": "In the first step, select the entity whose value you want to send to Grenton.",
+        "data": {
+          "entity_id": "Entity ID"
+        }
+      },
+      "add_attribute": {
+        "title": "Select the entity attribute to watch",
+        "description": "In the second step, choose the entity attribute to watch, and the Grenton user feature on the CLU or GATE to which this value will be assigned.\n\nNote! If the user feature is located on a CLU, include the CLU identifier, for example: \"CLU220000000->my_feature\". If the feature is on the GATE_HTTP, enter only the feature name, for example: \"my_feature\".",
+        "data": {
+          "attribute": "Attribute",
+          "name": "User feature in Grenton"
+        }
+      }
+    }
+  },
+  "selector": {
+    "action": {
+      "options": {
+        "add": "Add",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save"
+      }
+    }
+  }
+}

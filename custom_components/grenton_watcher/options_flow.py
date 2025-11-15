@@ -1,0 +1,126 @@
+from homeassistant import config_entries
+from homeassistant.helpers import selector
+import voluptuous as vol
+
+class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
+    _edit_index: int | None = None
+    _new_entity_id: str | None = None
+    _delete_index: int | None = None
+
+    async def async_step_init(self, user_input=None):
+        """Krok 1 – podgląd istniejących mapowań i wybór akcji."""
+        # initialize working copy once per flow
+        if not hasattr(self, "_working_mappings"):
+            self._working_mappings = list(self.config_entry.options.get("mappings", []))
+
+        if user_input is not None:
+            action = user_input["action"]
+            if action == "add":
+                return await self.async_step_add_entity()
+            elif action == "edit":
+                self._edit_index = int(user_input["mapping_index"])
+                return await self.async_step_edit()
+            elif action == "delete":
+                self._delete_index = int(user_input["mapping_index"])
+                return await self.async_step_delete()
+            elif action == "save":
+                # persist options and end OptionsFlow
+                return self.async_create_entry(title="", data={"mappings": self._working_mappings})
+
+        # dropdown labels from working copy
+        mapping_options = [
+            {"value": str(i), "label": f"{m['name']} ({m['entity_id']}, {m['attribute']})"}
+            for i, m in enumerate(self._working_mappings)
+        ]
+
+        actions = ["add"]
+        if mapping_options:
+            actions = ["save", "add", "edit", "delete"]
+
+        schema_dict = {}
+        if mapping_options:
+            schema_dict[vol.Optional("mapping_index", default=mapping_options[0]["value"])] = selector.SelectSelector({
+                "options": mapping_options,
+                "mode": "dropdown",
+            })
+
+        schema_dict[vol.Required("action")] = selector.SelectSelector(
+            selector.SelectSelectorConfig(
+                options=actions,
+                mode="dropdown",
+                translation_key="action",
+            )
+        )
+
+        return self.async_show_form(step_id="init", data_schema=vol.Schema(schema_dict))
+
+    async def async_step_add_entity(self, user_input=None):
+        """Krok 2a – wybór encji dla nowego mapowania."""
+        if user_input is not None:
+            self._new_entity_id = user_input["entity_id"]
+            return await self.async_step_add_attribute()
+
+        return self.async_show_form(
+            step_id="add_entity",
+            data_schema=vol.Schema({vol.Required("entity_id"): selector.EntitySelector()}),
+        )
+
+    async def async_step_add_attribute(self, user_input=None):
+        """Krok 2b – wybór atrybutu/state + nazwa dla nowego mapowania."""
+        if user_input is not None:
+            self._working_mappings.append({
+                "entity_id": self._new_entity_id,
+                "attribute": user_input["attribute"],
+                "name": user_input["name"],
+            })
+            # go back to init (no save yet)
+            return await self.async_step_init()
+
+        state = self.hass.states.get(self._new_entity_id)
+        attributes = list(state.attributes.keys()) if state else []
+        options = ["state"] + attributes
+
+        return self.async_show_form(
+            step_id="add_attribute",
+            data_schema=vol.Schema({
+                vol.Required("attribute"): selector.SelectSelector({"options": options, "mode": "dropdown"}),
+                vol.Required("name"): str,
+            }),
+        )
+
+    async def async_step_edit(self, user_input=None):
+        """Edycja istniejącego mapowania."""
+        mapping = self._working_mappings[self._edit_index]
+
+        if user_input is not None:
+            self._working_mappings[self._edit_index] = {
+                "entity_id": user_input["entity_id"],
+                "attribute": user_input["attribute"],
+                "name": user_input["name"],
+            }
+            # go back to init (no save yet)
+            return await self.async_step_init()
+
+        state = self.hass.states.get(mapping["entity_id"])
+        attributes = list(state.attributes.keys()) if state else []
+        options = ["state"] + attributes
+
+        return self.async_show_form(
+            step_id="edit",
+            data_schema=vol.Schema({
+                vol.Required("entity_id", default=mapping["entity_id"]): selector.EntitySelector(),
+                vol.Required("attribute", default=mapping["attribute"]): selector.SelectSelector(
+                    {"options": options, "mode": "dropdown"}
+                ),
+                vol.Required("name", default=mapping["name"]): str,
+            }),
+        )
+
+    async def async_step_delete(self, user_input=None):
+        """Usuwanie istniejącego mapowania."""
+        if self._delete_index is not None and 0 <= self._delete_index < len(self._working_mappings):
+            del self._working_mappings[self._delete_index]
+            # go back to init (no save yet)
+            return await self.async_step_init()
+
+        return self.async_abort(reason="invalid_mapping_index")

@@ -1,0 +1,10 @@
+{
+  "domain": "grenton_watcher",
+  "name": "Grenton Watcher",
+  "version": "1.0.0",
+  "documentation": "https://github.com/twojuser/grenton_watcher",
+  "requirements": ["aiohttp"],
+  "codeowners": ["@twojuser"],
+  "config_flow": true,
+  "iot_class": "local_push"
+}
