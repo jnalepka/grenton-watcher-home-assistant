@@ -7,6 +7,18 @@ from homeassistant.config_entries import ConfigEntry
 _LOGGER = logging.getLogger(__name__)
 DOMAIN = "grenton_watcher"
 
+def normalize_value(value):
+    if value is None:
+        return None
+    if hasattr(value, "value"):
+        return value.value
+    if isinstance(value, (list, set, tuple)):
+        return ",".join(
+            str(v.value if hasattr(v, "value") else v)
+            for v in value
+        )
+    return str(value)
+
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
     await hass.config_entries.async_reload(entry.entry_id)
 
@@ -28,8 +40,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         for m in mappings:
             if new_state.entity_id == m["entity_id"]:
                 attr = m.get("attribute")
-                value = new_state.state if attr == "state" else new_state.attributes.get(attr)
-                payload[m["name"]] = value
+                raw_value = new_state.state if attr == "state" else new_state.attributes.get(attr)
+                payload[m["name"]] = normalize_value(raw_value)
 
         if not payload:
             return
