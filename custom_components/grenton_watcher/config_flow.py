@@ -1,6 +1,7 @@
 from homeassistant import config_entries
 import voluptuous as vol
 from .options_flow import GrentonWatcherOptionsFlowHandler
+from homeassistant.core import callback
 
 DOMAIN = "grenton_watcher"
 
