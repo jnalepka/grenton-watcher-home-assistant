@@ -36,20 +36,33 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if not new_state:
             return
 
-        payload = {}
+        command = {}
+        counter = 1
         for m in mappings:
             if new_state.entity_id == m["entity_id"]:
                 attr = m.get("attribute")
                 raw_value = new_state.state if attr == "state" else new_state.attributes.get(attr)
-                payload[m["name"]] = normalize_value(raw_value)
+                
+                feature=m["name"]
+                val=normalize_value(raw_value)
+                
+                add_index = "" if counter == 1 else f"_{counter}"
+                counter += 1
+                if '->' in feature:
+                    name_part_0, name_part_1 = feature.split('->')
+                    if isinstance(val, str): val = f"\\'{val}\\'"
+                    command.update({f"command{add_index}": f"{name_part_0}:execute(0, 'setVar(\\'{name_part_1}\\', {val})')"})
+                else:
+                    if isinstance(val, str): val = f"\'{val}\'"
+                    command.update({f"command{add_index}": f"setVar('{feature}', {val})"})
 
-        if not payload:
+        if not command:
             return
 
         async with aiohttp.ClientSession() as session:
             try:
-                _LOGGER.info("Grenton Watcher send payload: %s", payload)
-                await session.post(api_endpoint, json=payload)
+                _LOGGER.info("Prepared commands: %s", command)
+                await session.post(api_endpoint, json=command)
             except Exception as e:
                 _LOGGER.error("Failed to send update: %s", e)
 
