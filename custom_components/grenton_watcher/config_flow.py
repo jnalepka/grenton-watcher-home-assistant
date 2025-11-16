@@ -28,7 +28,8 @@ class GrentonWatcherConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
     def _persist_last_inputs(self, user_input: dict) -> None:
         self.hass.data[f"{DOMAIN}_last_url"] = user_input["url"]
-
+        
     @staticmethod
-    def async_get_options_flow():
+    @callback
+    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> GrentonWatcherOptionsFlowHandler:
         return GrentonWatcherOptionsFlowHandler()
