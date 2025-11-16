@@ -17,6 +17,8 @@ def normalize_value(value):
             str(v.value if hasattr(v, "value") else v)
             for v in value
         )
+    if isinstance(value, (int, float)):
+        return value
     return str(value)
 
 async def async_update_options(hass: HomeAssistant, entry: ConfigEntry):
