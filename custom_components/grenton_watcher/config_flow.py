@@ -14,21 +14,21 @@ class GrentonWatcherConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             return self.async_create_entry(
                 title=user_input["name"],
                 data={
-                    "url": user_input["url"],
+                    "api_endpoint": user_input["api_endpoint"],
                 },
             )
         
-        default_url = self.hass.data.get(f"{DOMAIN}_last_url", "http://192.168.0.4/HAlistener")
+        default_url = self.hass.data.get(f"{DOMAIN}_last_api_endpoint", "http://192.168.0.4/HAlistener")
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema({
                 vol.Required("name"): str,
-                vol.Required("url", default=default_url): str,
+                vol.Required("api_endpoint", default=default_url): str,
             }),
         )
         
     def _persist_last_inputs(self, user_input: dict) -> None:
-        self.hass.data[f"{DOMAIN}_last_url"] = user_input["url"]
+        self.hass.data[f"{DOMAIN}_last_api_endpoint"] = user_input["api_endpoint"]
         
     @staticmethod
     @callback

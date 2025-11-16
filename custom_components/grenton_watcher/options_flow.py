@@ -8,8 +8,6 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
     _delete_index: int | None = None
 
     async def async_step_init(self, user_input=None):
-        """Krok 1 – podgląd istniejących mapowań i wybór akcji."""
-        # initialize working copy once per flow
         if not hasattr(self, "_working_mappings"):
             self._working_mappings = list(self.config_entry.options.get("mappings", []))
 
@@ -24,10 +22,8 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
                 self._delete_index = int(user_input["mapping_index"])
                 return await self.async_step_delete()
             elif action == "save":
-                # persist options and end OptionsFlow
                 return self.async_create_entry(title="", data={"mappings": self._working_mappings})
 
-        # dropdown labels from working copy
         mapping_options = [
             {"value": str(i), "label": f"{m['name']} ({m['entity_id']}, {m['attribute']})"}
             for i, m in enumerate(self._working_mappings)
@@ -55,7 +51,6 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
         return self.async_show_form(step_id="init", data_schema=vol.Schema(schema_dict))
 
     async def async_step_add_entity(self, user_input=None):
-        """Krok 2a – wybór encji dla nowego mapowania."""
         if user_input is not None:
             self._new_entity_id = user_input["entity_id"]
             return await self.async_step_add_attribute()
@@ -66,14 +61,12 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_add_attribute(self, user_input=None):
-        """Krok 2b – wybór atrybutu/state + nazwa dla nowego mapowania."""
         if user_input is not None:
             self._working_mappings.append({
                 "entity_id": self._new_entity_id,
                 "attribute": user_input["attribute"],
                 "name": user_input["name"],
             })
-            # go back to init (no save yet)
             return await self.async_step_init()
 
         state = self.hass.states.get(self._new_entity_id)
@@ -89,7 +82,6 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_edit(self, user_input=None):
-        """Edycja istniejącego mapowania."""
         mapping = self._working_mappings[self._edit_index]
 
         if user_input is not None:
@@ -98,7 +90,6 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
                 "attribute": user_input["attribute"],
                 "name": user_input["name"],
             }
-            # go back to init (no save yet)
             return await self.async_step_init()
 
         state = self.hass.states.get(mapping["entity_id"])
@@ -117,10 +108,8 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
         )
 
     async def async_step_delete(self, user_input=None):
-        """Usuwanie istniejącego mapowania."""
         if self._delete_index is not None and 0 <= self._delete_index < len(self._working_mappings):
             del self._working_mappings[self._delete_index]
-            # go back to init (no save yet)
             return await self.async_step_init()
 
         return self.async_abort(reason="invalid_mapping_index")

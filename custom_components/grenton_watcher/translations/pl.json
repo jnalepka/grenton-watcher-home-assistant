@@ -5,7 +5,7 @@
         "title": "Dodaj grupę obiektów",
         "description": "Dodaj grupę obiektów (dowolna nazwa), w ramach której zawarte będą mapowania encji na cechy użytkownika. Podaj również Adres URL do Grenton HTTP Listener.\n\nUwaga! Po utworzeniu grupy przejdź do ustawień grupy aby dodać mapowania.",
         "data": {
-          "url": "Adres URL do Grenton HTTP Listener",
+          "api_endpoint": "Adres URL do Grenton HTTP Listener",
           "name": "Nazwa grupy obiektów"
         }
       }

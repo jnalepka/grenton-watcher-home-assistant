@@ -5,7 +5,7 @@
         "title": "Add object group",
         "description": "Add an object group (any name) that will contain mappings between Home Assistant entities and Grenton user features. Also provide the URL address for the Grenton HTTP Listener.\n\nNote! After creating the group, go to the group settings to add mappings.",
         "data": {
-          "url": "URL to Grenton HTTP Listener",
+          "api_endpoint": "URL to Grenton HTTP Listener",
           "name": "Object group name"
         }
       }
