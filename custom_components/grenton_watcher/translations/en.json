@@ -33,7 +33,18 @@
         "description": "In the second step, choose the entity attribute to watch, and the Grenton user feature on the CLU or GATE to which this value will be assigned.\n\nNote! If the user feature is located on a CLU, include the CLU identifier, for example: \"CLU220000000->my_feature\". If the feature is on the GATE_HTTP, enter only the feature name, for example: \"my_feature\".",
         "data": {
           "attribute": "Attribute",
-          "name": "User feature in Grenton"
+          "name": "User feature in Grenton",
+          "function": "Optional function"
+        }
+      },
+      "edit_entity": {
+        "title": "Edit the entity",
+        "description": "Note! If the user feature is located on a CLU, include the CLU identifier, for example: \"CLU220000000->my_feature\". If the feature is on the GATE_HTTP, enter only the feature name, for example: \"my_feature\".",
+        "data": {
+          "entity_id": "Entity ID",
+          "attribute": "Attribute",
+          "name": "User feature in Grenton",
+          "function": "Optional function"
         }
       }
     }

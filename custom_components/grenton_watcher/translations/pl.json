@@ -33,7 +33,18 @@
         "description": "W drugim kroku wybierz atrybut encji do obserwowania, oraz cechę użytkownika na CLU lub GATE, do której ta wartość będzie przypisywana.\n\nUwaga! Jeśli cecha użytkownika znajduje się na CLU, dodaj identyfikator CLU, przykład: \"CLU220000000->moja_cecha\". Jeśli cecha znajduje się na GATE_HTTP, to wpisz samą nazwę cechy, przykład: \"moja_cecha\".",
         "data": {
           "attribute": "Atrybut",
-          "name": "Cecha użytkownika w Grenton"
+          "name": "Cecha użytkownika w Grenton",
+          "function": "Opcjonalna funkcja"
+        }
+      },
+      "edit_entity": {
+        "title": "Edytuj encję",
+        "description": "Uwaga! Jeśli cecha użytkownika znajduje się na CLU, dodaj identyfikator CLU, przykład: \"CLU220000000->moja_cecha\". Jeśli cecha znajduje się na GATE_HTTP, to wpisz samą nazwę cechy, przykład: \"moja_cecha\".",
+        "data": {
+          "entity_id": "Identyfikator encji",
+          "attribute": "Atrybut",
+          "name": "Cecha użytkownika w Grenton",
+          "function": "Opcjonalna funkcja"
         }
       }
     }
