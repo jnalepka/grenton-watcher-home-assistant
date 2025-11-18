@@ -2,6 +2,12 @@ from homeassistant import config_entries
 from homeassistant.helpers import selector
 import voluptuous as vol
 
+AVAILABLE_FUNCTIONS = [
+    "function_x", 
+    "function_y", 
+    "function_z"
+    ]
+
 class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
     _edit_index: int | None = None
     _new_entity_id: str | None = None
@@ -66,6 +72,7 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
                 "entity_id": self._new_entity_id,
                 "attribute": user_input["attribute"],
                 "name": user_input["name"],
+                "function": user_input["function"],
             })
             return await self.async_step_init()
 
@@ -78,6 +85,10 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
             data_schema=vol.Schema({
                 vol.Required("attribute"): selector.SelectSelector({"options": options, "mode": "dropdown"}),
                 vol.Required("name"): str,
+                vol.Required("function"): selector.SelectSelector({
+                    "options": AVAILABLE_FUNCTIONS,
+                    "mode": "dropdown",
+                }),
             }),
         )
 
@@ -89,6 +100,7 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
                 "entity_id": user_input["entity_id"],
                 "attribute": user_input["attribute"],
                 "name": user_input["name"],
+                "function": user_input["function"],
             }
             return await self.async_step_init()
 
@@ -104,6 +116,10 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
                     {"options": options, "mode": "dropdown"}
                 ),
                 vol.Required("name", default=mapping["name"]): str,
+                vol.Required("function", default=mapping.get("function", AVAILABLE_FUNCTIONS[0])): selector.SelectSelector({
+                    "options": AVAILABLE_FUNCTIONS,
+                    "mode": "dropdown",
+                }),
             }),
         )
 
