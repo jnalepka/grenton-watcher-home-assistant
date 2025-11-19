@@ -12,9 +12,9 @@
     }
   },
   "options": {
-    "title": "Manage Grenton user features",
     "step": {
       "init": {
+        "title": "Manage Grenton user features",
         "description": "Add, remove, or edit the Grenton user feature to which the Home Assistant entity value is written after each change.",
         "data": {
           "mapping_index": "User feature mapping",
