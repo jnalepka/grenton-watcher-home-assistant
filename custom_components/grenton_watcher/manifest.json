@@ -1,10 +1,18 @@
 {
   "domain": "grenton_watcher",
   "name": "Grenton Watcher",
-  "version": "1.0.0",
-  "documentation": "https://github.com/twojuser/grenton_watcher",
-  "requirements": ["aiohttp"],
-  "codeowners": ["@twojuser"],
+  "codeowners": [
+    "@jnalepka"
+  ],
   "config_flow": true,
-  "iot_class": "local_push"
+  "dependencies": [],
+  "documentation": "https://github.com/jnalepka/homeassistant-to-grenton",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/jnalepka/grenton-to-homeassistant/issues",
+  "requirements": [
+    "aiohttp"
+  ],
+  "single_config_entry": false,
+  "version": "v1.0.0"
 }

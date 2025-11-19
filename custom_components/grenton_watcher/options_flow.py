@@ -1,3 +1,12 @@
+"""
+==================================================
+Author: Jan Nalepka
+Script version: 1.0
+Date: 19.11.2025
+Repository: https://github.com/jnalepka/homeassistant-to-grenton
+==================================================
+"""
+
 from homeassistant import config_entries
 from homeassistant.helpers import selector
 import voluptuous as vol

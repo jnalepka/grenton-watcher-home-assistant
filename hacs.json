@@ -1,0 +1,6 @@
+{
+    "name": "Grenton Watcher",
+    "content_in_root": false,
+    "hide_default_branch": false,
+    "homeassistant": "2024.01.01"
+}

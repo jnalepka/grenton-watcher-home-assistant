@@ -1,3 +1,12 @@
+"""
+==================================================
+Author: Jan Nalepka
+Script version: 1.0
+Date: 19.11.2025
+Repository: https://github.com/jnalepka/homeassistant-to-grenton
+==================================================
+"""
+
 import logging
 import aiohttp
 from homeassistant.core import HomeAssistant, callback
