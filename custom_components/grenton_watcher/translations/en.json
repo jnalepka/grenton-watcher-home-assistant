@@ -34,17 +34,17 @@
         "data": {
           "attribute": "Attribute",
           "name": "User feature in Grenton",
-          "function": "Optional function"
+          "function": "Convert function"
         }
       },
-      "edit_entity": {
+      "edit": {
         "title": "Edit the entity",
         "description": "Note! If the user feature is located on a CLU, include the CLU identifier, for example: \"CLU220000000->my_feature\". If the feature is on the GATE_HTTP, enter only the feature name, for example: \"my_feature\".",
         "data": {
           "entity_id": "Entity ID",
           "attribute": "Attribute",
           "name": "User feature in Grenton",
-          "function": "Optional function"
+          "function": "Convert function"
         }
       }
     }
@@ -56,6 +56,15 @@
         "edit": "Edit",
         "delete": "Delete",
         "save": "Save"
+      }
+    },
+    "function": {
+      "options": {
+        "no_convert": "Do not convert",
+        "convert_state_on_off_to_1_0": "Convert state [off,on] to values [0,1]",
+        "convert_brightness_to_1_0": "Convert brightness [0-255] to values [0-1]",
+        "convert_hs_color_to_hue_to_1_0": "Extract from hs_color the hue value [0–360]",
+        "convert_hs_color_to_sat_to_1_0": "Extract from hs_color the saturation value [0–1]"
       }
     }
   }

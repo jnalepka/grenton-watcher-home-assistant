@@ -3,9 +3,11 @@ from homeassistant.helpers import selector
 import voluptuous as vol
 
 AVAILABLE_FUNCTIONS = [
-    "function_x", 
-    "function_y", 
-    "function_z"
+    "no_convert", 
+    "convert_state_on_off_to_1_0",
+    "convert_brightness_to_1_0",
+    "convert_hs_color_to_hue_0_360",
+    "convert_hs_color_to_sat_1_0"
     ]
 
 class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
@@ -88,6 +90,7 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Required("function"): selector.SelectSelector({
                     "options": AVAILABLE_FUNCTIONS,
                     "mode": "dropdown",
+                    "translation_key": "function"
                 }),
             }),
         )
@@ -119,6 +122,7 @@ class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
                 vol.Required("function", default=mapping.get("function", AVAILABLE_FUNCTIONS[0])): selector.SelectSelector({
                     "options": AVAILABLE_FUNCTIONS,
                     "mode": "dropdown",
+                    "translation_key": "function"
                 }),
             }),
         )

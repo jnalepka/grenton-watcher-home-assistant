@@ -34,17 +34,17 @@
         "data": {
           "attribute": "Atrybut",
           "name": "Cecha użytkownika w Grenton",
-          "function": "Opcjonalna funkcja"
+          "function": "Funkcja konwertująca"
         }
       },
-      "edit_entity": {
+      "edit": {
         "title": "Edytuj encję",
         "description": "Uwaga! Jeśli cecha użytkownika znajduje się na CLU, dodaj identyfikator CLU, przykład: \"CLU220000000->moja_cecha\". Jeśli cecha znajduje się na GATE_HTTP, to wpisz samą nazwę cechy, przykład: \"moja_cecha\".",
         "data": {
           "entity_id": "Identyfikator encji",
           "attribute": "Atrybut",
           "name": "Cecha użytkownika w Grenton",
-          "function": "Opcjonalna funkcja"
+          "function": "Funkcja konwertująca"
         }
       }
     }
@@ -56,6 +56,15 @@
         "edit": "Edytuj",
         "delete": "Usuń",
         "save": "Zapisz"
+      }
+    },
+    "function": {
+      "options": {
+        "no_convert": "Nie konwertuj",
+        "convert_state_on_off_to_1_0": "Zamień state [off,on] na wartości [0,1]",
+        "convert_brightness_to_1_0": "Zamień brightness [0-255] na wartości [0-1]",
+        "convert_hs_color_to_hue_to_1_0": "Wyciągnij z hs_color wartość hue [0-360]",
+        "convert_hs_color_to_sat_to_1_0": "Wyciągnij z hs_color wartość saturation [0-1]"
       }
     }
   }
