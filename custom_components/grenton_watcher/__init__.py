@@ -47,15 +47,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 feature=m["name"]
                 func = m.get("function", "no_convert")
 
-                _LOGGER.info("Value to convert: %s", val)
-                _LOGGER.info("Function: %s", func)
-
                 if func == "convert_state_on_off_to_1_0":
                     if isinstance(val, str):
                         val = 1 if val.lower() == "on" else 0
                 elif func == "convert_brightness_to_1_0":
                     try:
-                        val = float(val) / 255.0
+                        val = round(float(val) / 255.0, 2)
                     except Exception:
                         val = 0.0
                 elif func == "convert_hs_color_to_hue_0_360":
@@ -70,9 +67,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             val = float(val[1]) / 100.0
                         except Exception:
                             val = 0.0
-                _LOGGER.info("Value after convert: %s", val)
+                
                 val=normalize_value(val)
-                _LOGGER.info("Valueafter normalize: %s", val)
                 
                 add_index = "" if counter == 1 else f"_{counter}"
                 counter += 1
