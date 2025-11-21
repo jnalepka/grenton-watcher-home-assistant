@@ -1,6 +1,7 @@
-<img src="https://github.com/user-attachments/assets/788babbf-315b-4859-94e9-7b7ec33df2cb" alt="grenton_ha" width="300"/>
+<img src="https://github.com/user-attachments/assets/1f08b4ab-6e7c-447a-8a26-b582f8b7157f" width="600"/>
 
-# Home Assistant to Grenton
+# Grenton Watcher (Home Assistant)
+
 
 Run services and read entities from Home Assistant in the Grenton system.
 
