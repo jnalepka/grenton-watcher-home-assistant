@@ -6,7 +6,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/jnalepka/grenton-watcher-home-assistant?style=for-the-badge)](https://github.com/jnalepka/grenton-watcher-home-assistant/releases)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/jnalepka/grenton-watcher-home-assistant/graphs/commit-activity)
 [![License: Non-Commercial](https://img.shields.io/badge/License-Non--Commercial-red.svg?style=for-the-badge)](LICENSE)
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee)]([TWOJ_LINK_DO_BUY_ME_A_COFFEE](https://tipply.pl/@jnalepka))
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee)](https://tipply.pl/@jnalepka)
 
 Grenton Watcher is a custom integration for Home Assistant that allows you to automatically send Home Assistant entity values directly to the Grenton system.
 It observes selected entities and synchronizes their state with Grenton user features in real-time.
