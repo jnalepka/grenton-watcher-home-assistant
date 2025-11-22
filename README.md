@@ -1,125 +1,127 @@
-<img src="https://github.com/user-attachments/assets/1f08b4ab-6e7c-447a-8a26-b582f8b7157f" width="600"/>
+<img src="https://github.com/user-attachments/assets/85862bb8-87d8-48d8-a5ce-b4046369031c" width="600"/>
 
 # Grenton Watcher (Home Assistant)
 
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/jnalepka/grenton-watcher-home-assistant?style=for-the-badge)](https://github.com/jnalepka/grenton-watcher-home-assistant/releases)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/jnalepka/grenton-watcher-home-assistant/graphs/commit-activity)
+[![License: Non-Commercial](https://img.shields.io/badge/License-Non--Commercial-red.svg?style=for-the-badge)](LICENSE)
 
-Run services and read entities from Home Assistant in the Grenton system.
+Grenton Watcher is a custom integration for Home Assistant that allows you to automatically send Home Assistant entity values directly to the Grenton system.
+It observes selected entities and synchronizes their state with Grenton user features in real-time.
+
 
 <a href="https://tipply.pl/@jnalepka">
     <img src="https://img.shields.io/static/v1?label=Donate&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86" alt="Donate" width="130" height="30">
 </a>
 
-<br> Watch the video how to use this integration: https://www.youtube.com/watch?v=7vgE-qqPxfQ
+## ✨ Features
 
-## Home Assistant Long-lived access token
+* **Real-time Synchronization:** Pushes changes instantly when HA entity state changes.
+* **Built-in Value Converters:** Allows you to select conversion functions to format values specifically for myGrenton widgets.
+
+## 🚀 Installation
+
+### Option 1: HACS (Recommended)
+
+1.  Open [HACS](https://www.hacs.xyz/docs/use/download/download/) in your Home Assistant instance.
+2.  Search **Grenton Watcher** and **Download**.
+3.  Restart Home Assistant.
+
+### Option 2: Manual Installation
+
+1.  Download the latest release from the [Releases](https://github.com/jnalepka/grenton-watcher-home-assistant/releases) section.
+2.  Extract the zip file.
+3.  Copy the `grenton_watcher` folder into your `custom_components` directory (usually `/config/custom_components/`).
+4.  Restart Home Assistant.
+
+
+## 🟥 Requirements on the Grenton side
+
+> Note: If you already have a Listener object from the integration https://github.com/jnalepka/grenton-to-homeassistant
+, there is no need to create another one.
+
+1. Create a `HTTPListener` virtual object on the `GATE_HTTP` named `HA_Integration_Listener` and configure it as follows:
+   * Path - `/HAlistener` (You can edit it if you want)
+   * ResponseType - `JSON`
+
+  <img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/32aef72d-bd06-4ec9-8861-20c48c50b06f" />
+
+2. Create a script on the `GATE_HTTP` named `HA_Integration_Script`.
+
+```lua
+-- ╔═══════════════════════════════════════════════════════════════════════╗
+-- ║                        Author: Jan Nalepka                            ║
+-- ║                                                                       ║
+-- ║ Script: HA_Integration_Script                                         ║
+-- ║ Description: Display and control Grenton objects in Home Assistant.   ║
+-- ║                                                                       ║
+-- ║ License: Free for non-commercial use                                  ║
+-- ║ Github: https://github.com/jnalepka/grenton-watcher-home-assistant    ║
+-- ║                                                                       ║
+-- ║ Script version: 1.0.0                                                 ║
+-- ║                                                                       ║
+-- ║ Requirements:                                                         ║
+-- ║    Gate Http:                                                         ║
+-- ║          1.  Gate Http NAME: "GATE_HTTP" <or change it in this script>║
+-- ║                                                                       ║
+-- ║    HttpListener virtual object:                                       ║
+-- ║          Name: HA_Integration_Listener                                ║
+-- ║          Path: /HAlistener                                            ║
+-- ║          ResponseType: JSON                                           ║
+-- ║                                                                       ║
+-- ╚═══════════════════════════════════════════════════════════════════════╝
+
+local reqJson = GATE_HTTP->HA_Integration_Listener->RequestBody
+local code = 400
+local resp = { g_status = "Grenton script ERROR" }
+
+if reqJson.command or reqJson.status then
+    local results = {}
+
+    for key, value in pairs(reqJson) do
+        results[key] = load(value)()
+    end
+
+    resp = { g_status = "OK" }
+    for key, result in pairs(results) do
+        resp[key] = result
+    end
+
+    code = 200
+end
+
+GATE_HTTP->HA_Integration_Listener->SetStatusCode(code)
+GATE_HTTP->HA_Integration_Listener->SetResponseBody(resp)
+GATE_HTTP->HA_Integration_Listener->SendResponse()
+```
+
+> Note: Pay attention to the name of the GATE and the virtual object.
+
+3. Attach `HA_Integration_Script` script to the `OnRequest` event of the `HA_Integration_Listener` virtual object.
+
+<img width="836" height="643" alt="image" src="https://github.com/user-attachments/assets/d5fcac49-6656-4b1b-9964-fb2b280c7792" />
+
+
+## 📖 Usage
+
+1. Navigate to **Settings** > **Devices & Services** and click **+ Add Integration**. Search for **Grenton Watcher**.
+2. Enter an **Object Group Name** and the **Gate Http Listener URL**.
+   * *The group name can be arbitrary; it is used solely to organize your observed entities.*
+3. Proceed to the configuration to add your first watcher:
+   * Select the **Entity**.
+   * Select the **Attribute** to watch, enter the target **Grenton User Feature**, and optionally choose a **Conversion Function**.
+
+> **Note:** If the user feature is located on a CLU, you must include the CLU identifier (e.g., `CLU220000000->my_feature`). If the feature is directly on the GATE_HTTP, enter only the feature name (e.g., `my_feature`).
+
+
+## Run the Home Assistant service
+
+### Home Assistant Long-lived access token
 
 In Home Assistant go to the Profile->Security->Long-lived access tokens, and create the long-lived access token. Token will be valid for 10 years from creation.
 
-# Read entities from Home Assistant
-
-1. On the Gate HTTP, create an `HttpRequest` virtual object:
-
-   ![image](https://github.com/user-attachments/assets/dfa7284b-c2d7-409c-9e85-8979bc95d209)
-
-   * `Name`: HA_Request_Get_States
-   * `Host`: http://<your HA IP Address>:8123 (e.g. http://192.168.0.114:8123)
-   * `Path`: /api/states
-   * `Method`: GET
-   * `RequestType`: JSON
-   * `ResponseType`: JSON
-   * `RequestHeadres`: Authorization: Bearer <your Long-lived access token> (e.g. Authorization: Bearer eyJhbGciOiJIUz.....)
-  
-2. On the Gate HTTP, create a script, named `HA_Integration_Response`:
-
-    ```lua
-    -- ╔═══════════════════════════════════════════════════════════════════════╗
-    -- ║                        Author: Jan Nalepka                            ║
-    -- ║                                                                       ║
-    -- ║ Script: HA_Integration_Response                                       ║
-    -- ║ Description: Analyze all entities from Home Assistant.                ║
-    -- ║                                                                       ║
-    -- ║ License: MIT License                                                  ║
-    -- ║ Github: https://github.com/jnalepka/homeassistant-to-grenton          ║
-    -- ║                                                                       ║
-    -- ║ Version: 1.0.0                                                        ║
-    -- ║                                                                       ║
-    -- ║ Requirements:                                                         ║
-    -- ║    Gate Http:                                                         ║
-    -- ║          1.  Gate Http NAME: "GATE_HTTP" <or change it in this script>║
-    -- ║                                                                       ║
-    -- ║    Http_Request virtual object:                                       ║
-    -- ║          Name: HA_Request_Get_States                                  ║
-    -- ║          Host: http://192.168.0.114:8123  (example)                   ║
-    -- ║          Path: /api/states                                            ║
-    -- ║          RequestType: JSON                                            ║
-    -- ║          ResponseType: JSON                                           ║
-    -- ║          RequestHeaders: Authorization: Bearer <your HA token>        ║
-    -- ║                                                                       ║
-    -- ╚═══════════════════════════════════════════════════════════════════════╝
-    
-    local respJson = GATE_HTTP->HA_Request_Get_States->ResponseBody
-    
-    if respJson ~= nil then
-    	for i = 1, #respJson do
-    	    local entity_id = respJson[i].entity_id
-    	    
-    -- ╔═══════════════════════════════════════════════════════════════════════╗
-    -- ║                   READ YOUR ENTITIES BELOW                            ║
-    -- ╚═══════════════════════════════════════════════════════════════════════╝
-    		
-    		-- EXAMPLE, YOU CAN DELETE IT
-    	
-    	    if entity_id == "light.tv_light" then
-    	    	if respJson[i].state == "on" then
-    	    		GATE_HTTP->HA_tv_light_value = 1 -- User feature on the GATE_HTTP. Save the lamp value, i.e. to show it in the myGrenton.
-    	    	else
-    	    		GATE_HTTP->HA_tv_light_value = 0
-    	    	end
-    	    end
-
-          if entity_id == "light.night_lamp" then
-    	    	if respJson[i].state == "on" then
-    	    		GATE_HTTP->HA_night_lamp_value = 1
-    	    	else
-    	    		GATE_HTTP->HA_night_lamp_value = 0
-    	    	end
-             -- example of getting an attributes
-    			local FriendlyName = respJson[i].attributes.friendly_name
-    			local ColorMode = respJson[i].attributes.color_mode
-    	    end
-    	    
-    		-- END OF EXAMPLE
-    	    
-    		-- TO DO. Create your own conditions based on the example.
-    	    
-    	end
-    end
-    
-    ```
-
-   > Note: If you use a different name for the Gate HTTP or the virtual object, modify it in the script.
-
-3. Attach the script to the `HA_Request_Get_States` OnResponse event:
-
-   ![image](https://github.com/user-attachments/assets/23921008-6963-4f0c-964b-4337c9821a3f)
-
-4. On the Gate HTTP, create a `Timer` virtual object:
-
-   ![image](https://github.com/user-attachments/assets/4a398e02-8c5d-4246-85fa-335cd73fcbce)
-
-   * `Name`: HA_Request_Timer
-   * `Time`: 10000 ms ((You can change it if you want, but 10 seconds is quite enough)
-   * `Mode`: Interval
-
-5. Attach the `HA_Request_Get_States` SendRequest() method to the `HA_Request_Timer` OnStart and OnTimer events:
-
-   ![image](https://github.com/user-attachments/assets/e0ac09b7-13e8-4984-8e6f-f681d37cfe1d)
-
-6. Attach the `HA_Request_Timer` Start() method to the `GATE_HTTP` OnInit event:
-
-   ![image](https://github.com/user-attachments/assets/f847371c-3bf0-4225-a3cc-abdf6be467b1)
-
-# Run the Home Assistant service
+### Grenton-side requirement for calling Home Assistant services
 
 1. On the Gate HTTP, create an `HttpRequest` virtual object:
 
@@ -196,7 +198,7 @@ In Home Assistant go to the Profile->Security->Long-lived access tokens, and cre
    ![image](https://github.com/user-attachments/assets/948074ff-c0ac-4ecd-bdfa-75c5f8e74b5c)
 
 
-## Simple Home Assistant services
+### Simple Home Assistant services
 
    | ha_entity    | ha_method  | description |
    |-------------|-------------|-------------|
@@ -220,7 +222,7 @@ In Home Assistant go to the Profile->Security->Long-lived access tokens, and cre
    | climate.your_thermostat | turn_off | Turns climate device off. |
    | climate.your_thermostat | toggle | Toggles climate device, from on to off, or off to on. |
 
-# (Optional) Use custom script to run the Home Assistant service with attributes
+## (Optional) Use custom script to run the Home Assistant service with attributes
 
 ### For example, we will use a script located in the custom_scripts/HA_Integration_Set_Light.lua folder
 
@@ -308,10 +310,18 @@ In Home Assistant go to the Profile->Security->Long-lived access tokens, and cre
    * `Name`: attr_color_temp `Type`: number `Default`: -1  (range: 153-500), where 153 is cold≈6500K, 500 is warm≈2000K
   
 
-## Examples
+### Examples
    
    | ha_entity    | ha_method  | attr_brightness | attr_hs_color | attr_color_temp |  description |
    |-------------|-------------|-------------|-------------|-------------|-------------|
    | light.your_lamp | turn_on | [0-255] | default | default | Turn on one or more lights and set brightness. |
    | light.your_lamp | turn_on | [0-255] | "[300,70]" | default | Turn on one or more lights and set brightness, hue and saturation. |
    | light.your_lamp | turn_on | [0-255] | default | [153-500] | Turn on one or more lights and set brightness and color temperature. |
+
+## 📄 License
+
+This project is licensed for **Personal, Non-Commercial Use Only**. You are free to use, copy, and modify this software for your own personal home automation setup.
+
+❌ **Commercial use is prohibited** without prior written permission.
+
+See the [LICENSE](LICENSE) file for the full text.
