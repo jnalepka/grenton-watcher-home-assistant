@@ -64,7 +64,12 @@
         "convert_state_on_off_to_1_0": "Convert state [off,on] to values [0,1]",
         "convert_brightness_to_1_0": "Convert brightness [0-255] to values [0-1]",
         "convert_hs_color_to_hue_to_1_0": "Extract from hs_color the hue value [0–360]",
-        "convert_hs_color_to_sat_to_1_0": "Extract from hs_color the saturation value [0–1]"
+        "convert_hs_color_to_sat_to_1_0": "Extract from hs_color the saturation value [0–1]",
+        "convert_hvac_state_to_coolmaster_state_0_1": "Extract from hvac_state the state [0-1] (CoolMaster Widget)",
+        "convert_hvac_state_to_coolmaster_connection_status": "Extract from hvac_state the connection status [0-1] (CoolMaster Widget)",
+        "convert_hvac_state_to_coolmaster_mode": "Extract from hvac_state the mode value [1-5] (CoolMaster Widget)",
+        "convert_hvac_fan_mode_to_coolmaster_fan_speed": "Extract from hvac_fan_mode the fan speed value [0-5] (CoolMaster Widget)",
+        "convert_hvac_swing_mode_to_coolmaster_louver": "Extract from hvac_swing_mode the louver position value [1-7] (CoolMaster Widget)"
       }
     }
   }

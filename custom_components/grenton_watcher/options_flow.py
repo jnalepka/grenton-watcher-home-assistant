@@ -16,7 +16,12 @@ AVAILABLE_FUNCTIONS = [
     "convert_state_on_off_to_1_0",
     "convert_brightness_to_1_0",
     "convert_hs_color_to_hue_0_360",
-    "convert_hs_color_to_sat_1_0"
+    "convert_hs_color_to_sat_1_0",
+    "convert_hvac_state_to_coolmaster_state_0_1",
+    "convert_hvac_state_to_coolmaster_connection_status",
+    "convert_hvac_state_to_coolmaster_mode",
+    "convert_hvac_fan_mode_to_coolmaster_fan_speed",
+    "convert_hvac_swing_mode_to_coolmaster_louver",
     ]
 
 class GrentonWatcherOptionsFlowHandler(config_entries.OptionsFlow):
