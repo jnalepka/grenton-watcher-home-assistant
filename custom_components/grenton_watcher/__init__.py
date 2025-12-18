@@ -76,6 +76,51 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             val = float(val[1]) / 100.0
                         except Exception:
                             val = 0.0
+                elif func == "convert_hvac_state_to_coolmaster_state_0_1":
+                    if isinstance(val, str):
+                        val = 0 if val.lower() == "off" else 1
+                elif func == "convert_hvac_state_to_coolmaster_connection_status":
+                    if isinstance(val, str):
+                        val = 0 if val.lower() == "unavailable" else 1
+                elif func == "convert_hvac_state_to_coolmaster_mode":
+                    if isinstance(val, str):
+                        v = val.lower()
+                        if v == "cool":
+                            val = 1
+                        elif v == "heat":
+                            val = 2
+                        elif v == "fan_only":
+                            val = 3
+                        elif v == "dry":
+                            val = 4
+                        else:
+                            val = 5 # auto
+                elif func == "convert_hvac_fan_mode_to_coolmaster_fan_speed":
+                    if isinstance(val, str):
+                        v = val.lower()
+                        if v == "silent":
+                            val = 0
+                        elif v == "low":
+                            val = 1
+                        elif v == "medium":
+                            val = 2
+                        elif v == "high":
+                            val = 3
+                        elif v == "turbo":
+                            val = 4
+                        else:
+                            val = 5 # auto
+                elif func == "convert_hvac_swing_mode_to_coolmaster_louver":
+                    if isinstance(val, str):
+                        v = val.lower()
+                        if v == "both":
+                            val = 1
+                        elif v == "horizontal":
+                            val = 2
+                        elif v == "vertical":
+                            val = 6
+                        else:
+                            val = 7 # off
                 
                 val=normalize_value(val)
                 

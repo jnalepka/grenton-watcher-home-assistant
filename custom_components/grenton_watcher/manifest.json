@@ -14,5 +14,5 @@
     "aiohttp"
   ],
   "single_config_entry": false,
-  "version": "v1.0.0"
+  "version": "v1.1.0"
 }
